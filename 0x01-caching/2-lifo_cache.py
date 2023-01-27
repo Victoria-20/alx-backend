@@ -10,13 +10,18 @@ class LIFOCache(BaseCaching):
     def put(self, key, item):
         """assign to the dictionary self.cache_data the
         item value for the key key"""
-        if key not in self.cache_data and item is not None:
-            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                self.cache_data.popitem()
-        print(f"DISCARD: {self.cache_data[key]}")
+        if key in self.cache_data:
+            pop_key = self.cache_data.pop(key)
+            print(f"DISCARD: {pop_key}", end='\n')
+        elif len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            self.cache_data.pop(next(iter(self.cache_data)))
+        self.cache_data[key] = item
 
     def get(self, key):
         """Returns the value in self.cache_data linked to the key """
-        if key is None or self.cache_data[key] is None:
+        if key in self.cache_data:
+            value = self.cache_data.pop(key)
+            self.cache_data[key] = value
+            return value
+        else:
             return None
-        return self.cache_data[key]
