@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv
 import math
 from typing import List
@@ -28,11 +29,10 @@ class Server:
         page_size with default value 10."""
 
         self.dataset()
-        assert type(page) is int and page > 0
-        assert type(page_size) is int and page_size > 0
-
         if len(self.__dataset) == 0:
             return[]
+        assert type(page) is int and page > 0
+        assert type(page_size) is int and page_size > 0
 
         start_index, end_index = index_range(page, page_size)
         return(self.__dataset[start_index: end_index])
