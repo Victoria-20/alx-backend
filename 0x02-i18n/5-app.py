@@ -1,12 +1,25 @@
 #!/usr/bin/env python3
-"""5. Mock logging in"""
-
-from flask import Flask, render_template, request, g
+"""6. Use user locale"""
+from flask import Flask, render_template, request
 from flask_babel import Babel
 
+app = Flask(__name__)
+babel = Babel(app)
 
+
+class Config(object):
+    """class for supported languages and timezone"""
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = 'en'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
+
+
+app.config.from_object(Config)
+
+
+@babel.localeselector
 def get_locale():
-    """determine the best match with our supported languages"""
+    """select a language translation to use for that request:"""
     if request.args.get('locale'):
         locale = request.args.get('locale')
         if locale in app.config['LANGUAGES']:
@@ -14,11 +27,6 @@ def get_locale():
     else:
         return request.accept_languages.best_match(app.config['LANGUAGES'])
 
-
-app = Flask(__name__)
-
-
-babel = Babel(app, locale_selector=get_locale)
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -50,24 +58,11 @@ def before_request():
     g.user = get_user()
 
 
-class Config(object):
-    """configuration for Babel"""
-    LANGUAGES = ['en', 'fr']
-    BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
-
-
-app.config.from_object('1-app.Config')
-
-
-@app.route('/', methods=['GET'], strict_slashes=False)
+@app.route("/")
 def index():
-    """
-    GET root
-    renders 2-index.html
-    """
-    return render_template('5-index.html')
+    """renders the 6-index.html"""
+    return render_template("6-index.html")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000")
+    app.run()
