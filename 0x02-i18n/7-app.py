@@ -39,10 +39,8 @@ users = {
 
 
 def get_user():
-    """
-    gets user from url parameter, if nothing
-    is passed or user not in users, returns None
-    """
+    """gets user from url parameter, if nothing
+    is passed or user not in users, returns None"""
     login_as = request.args.get("login_as", False)
     if login_as:
         user = users.get(int(login_as), False)
@@ -71,17 +69,15 @@ def get_timezone():
 
 @app.before_request
 def before_request():
-    """
-    use get_user to find a user if any,
-    and set it as a global on flask.g.user
-    """
+    """use get_user to find a user if any,
+    and set it as a global on flask.g.user"""
     g.user = get_user()
 
 
 @app.route("/")
 def index():
-    """renders the 6-index.html"""
-    return render_template("6-index.html")
+    """renders the 7-index.html"""
+    return render_template("7-index.html")
 
 
 if __name__ == "__main__":
